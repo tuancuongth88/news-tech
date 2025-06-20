@@ -4,18 +4,25 @@
 <section class="row">
 	<!-- Category posts -->
 	@foreach($cates as $cate)
+
 		<article class="six column">
 			<h4 class="cat-title"><a href="category/{{ $cate->slug }}">{{ $cate->name }} ( {{ $cate->posts->where('status',1)->count() }} )</a></h4>
-			<?php 
+			<?php
 				$posts = $cate->posts->where('status',1)->sortByDesc('created_at')->take(4);
 				$post_1 = $posts->shift();
 			?>
+            @php
+//                if($cate->id != 1) {
+//                    dd($posts, $post_1);
+//                }
+            @endphp
+
 			{{-- Neu co 1 bai viet --}}
 			@if($post_1)
 				<div class="post-image zoom-out">
-					@if($post_1->feture) 
+					@if($post_1->feture)
 						<?php $image = $post_1->feture;?>
-					@else 
+					@else
 						<?php $image = 'http://placehold.it/300x220'; ?>
 					@endif
 					<figure><a href="post/{{$post_1->slug}}.html"><img src="{{ $image }}" alt="" style="width:300px;height:220px"></a>
@@ -68,7 +75,7 @@
 				<div class="video">
 				  <a href="{{$video->feture}}" title="{{$video->title}}">
 				  	<video src="{{$video->feture}}" style="width: 100%"></video>
-				  </a>       
+				  </a>
 				</div>
 			</div>
 			@endforeach

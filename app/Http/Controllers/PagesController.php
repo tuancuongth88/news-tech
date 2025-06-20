@@ -14,7 +14,7 @@ class PagesController extends Controller
     public function getindex()
     {
         try {
-            $cates = Category::where('name','!=','video')->get();
+            $cates = Category::where('name','!=','video')->whereNotNull('parent_id')->get();
             $videos = Post::query()->where('post_type','=','video')->take(5)->orderBy('created_at','desc')->get();
             return view('news.pages.home',['cates'=>$cates,'videos'=>$videos]);
         }catch (\Exception $e) {
@@ -44,13 +44,12 @@ class PagesController extends Controller
     public function getSubCategory($slug, $sub_slug)
     {
         $cate = Category::where('slug', $slug)->first();
-        $sub_cate = Category::where('slug', $sub_slug)->first();
-        dd($sub_slug);
+        $sub_cate = Category::where('slug', "$slug/$sub_slug")->first();
         if(!$cate || !$sub_cate || !$sub_cate->posts){
             return view('news.pages.category',['key'=>$slug]);
         } else {
             $list = Post::where('category_id',$sub_cate->id)->where('status',1)->orderBy('created_at','desc')->paginate(10);
-            return view('news.pages.category',['posts'=>$list,'cate'=>$cate->name, 'listCategory' => [$sub_cate]]);
+            return view('news.pages.category',['posts'=>$list,'cate'=>$sub_cate->name, 'listCategory' => [$sub_cate]]);
         }
     }
 
