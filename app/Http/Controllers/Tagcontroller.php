@@ -42,7 +42,7 @@ class Tagcontroller extends Controller
     public function dataTable()
     {
     	$model = Tag::query();
-    	return DataTables::eloquent($model)
+    	return DataTables::of($model)
     			->addColumn('post_count', function(Tag $tag) {
                     return $tag->posts->count() . ' bài';
                 })

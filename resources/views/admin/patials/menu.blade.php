@@ -45,10 +45,6 @@
             </li>
 
             <li>
-                <a href="laravel-filemanager?type=Images&CKEditor=demo&CKEditorFuncNum=1&langCode=en"><i class="fa fa-file-image-o fa-fw"></i> Tệp tin</a>
-            </li>
-
-            <li>
                 <a href="admin/tag"><i class="fa fa-tags fa-fw"></i> Tags</a>
                 <!-- /.nav-second-level -->
             </li>

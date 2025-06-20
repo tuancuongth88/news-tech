@@ -28,14 +28,32 @@ class PagesController extends Controller
     public function getCategory($slug)
     {
         $cate = Category::where('slug', $slug)->first();
+        $categories = Category::where('parent_id',$cate->id)->get();
+        if ($categories->count() == 0) {
+            $categories = $cate;
+        }
         if(!$cate || !$cate->posts){
             return view('news.pages.category',['key'=>$slug]);
         } else {
-            $list = Post::where('category_id',$cate->id)->where('status',1)->orderBy('created_at','desc')->paginate(2);
-            return view('news.pages.category',['posts'=>$list,'cate'=>$cate->name]);
+            $list = Post::whereIn('category_id',$categories->pluck('id')->toArray())->where('status',1)->orderBy('created_at','desc')->paginate(20);
+            return view('news.pages.category',['posts'=>$list,'cate'=>$cate->name, 'listCategory' => $categories]);
         }
 
     }
+
+    public function getSubCategory($slug, $sub_slug)
+    {
+        $cate = Category::where('slug', $slug)->first();
+        $sub_cate = Category::where('slug', $sub_slug)->first();
+        dd($sub_slug);
+        if(!$cate || !$sub_cate || !$sub_cate->posts){
+            return view('news.pages.category',['key'=>$slug]);
+        } else {
+            $list = Post::where('category_id',$sub_cate->id)->where('status',1)->orderBy('created_at','desc')->paginate(10);
+            return view('news.pages.category',['posts'=>$list,'cate'=>$cate->name, 'listCategory' => [$sub_cate]]);
+        }
+    }
+
     public function getPost($slug)
     {
     	$post = Post::where('status',1)->where('slug', $slug)->first();

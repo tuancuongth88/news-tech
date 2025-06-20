@@ -24,7 +24,7 @@
                     <strong>{{session('errfile')}}</strong>
                 </div>
             @endif
-           
+
             <form action="admin/post/add" method="POST" enctype="multipart/form-data">
                  <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <div class="form-group">
@@ -39,7 +39,11 @@
                     <label>Chuyên mục</label>
                     <select class="form-control" name="category_id">
                         @foreach($cates as $cate)
-                        <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                            @if(is_null($cate->parent_id))
+                                <optgroup label="{{ $cate->name }}">
+                            @else
+                                <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>

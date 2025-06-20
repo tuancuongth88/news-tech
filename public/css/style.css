@@ -1,7 +1,7 @@
 /*-------------------------------------------------*/
 /* =  General
 /*-------------------------------------------------*/
-html { 
+html {
     background: url('../images/bg.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -487,8 +487,8 @@ h4.post-title {
 /* Navigation */
 .carousel-navigation {
     position: absolute;
-    right: 9px; 
-    top: -32px; 
+    right: 9px;
+    top: -32px;
     z-index: 1;
 }
 
@@ -516,7 +516,7 @@ h4.post-title {
 /*-------------------------------------------------*/
 .pagenation {
     border-top: 1px solid #e4e4e4;
-    padding: 20px 0 0 0; 
+    padding: 20px 0 0 0;
     margin: 10px 0 30px 0;
 }
 
@@ -1594,7 +1594,7 @@ input[type="submit"]:hover {
     color: #d84c4c;
 }
 
-.message.success { 
+.message.success {
     color: #619d21;
 }
 
@@ -2097,4 +2097,39 @@ input[type="submit"]:hover {
     background: #000;
     background: rgba(0, 0, 0, .8);
     background: url(http://www.htmltocss.com/rgbatopng.php?rgba=0,0,0,0.8)\0/;
+}
+/*Them moi de hien sub menu*/
+.has-submenu {
+     position: relative;
+ }
+
+.has-submenu .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 200px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.has-submenu:hover .submenu {
+    display: block;
+}
+
+.submenu li {
+    list-style: none;
+}
+
+.submenu li a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    background-color: #d87a68;
+}
+
+.submenu li a:hover {
+    background: #f0f0f0;
 }

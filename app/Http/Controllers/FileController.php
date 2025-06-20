@@ -8,20 +8,59 @@ use Illuminate\Support\Facades\Session;
 
 class FileController extends Controller
 {
-    public function getList()
+    public function index()
     {
-    	$files = File::all();
-    	return view('admin.file.list',['files'=>$files]);
+        $files = File::all();
+        return view('admin.file.index', compact('files'));
     }
-    public function getDelete($id)
+
+    public function create()
     {
-    	$file = File::find($id);
-	    	if($file){
-	    		$file->delete();
-	    		Session::flash('flash_success','Xóa thành công.');
-	    	} else {
-	    		Session::flash('flash_err','Bài viết không tồn tại.');
-	    	}
-	    	return redirect()->route('list-file');
+        return view('admin.file.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'file' => 'required|file',
+        ]);
+
+        $path = $request->file('file')->store('uploads', 'public');
+
+        File::create([
+            'name' => $request->name,
+            'link' => '/storage/' . $path,
+        ]);
+
+        return redirect()->route('admin.file.index')->with('success', 'File uploaded successfully.');
+    }
+
+    public function edit(File $file)
+    {
+        return view('admin.file.edit', compact('file'));
+    }
+
+    public function update(Request $request, File $file)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('uploads', 'public');
+            $file->link = '/storage/' . $path;
+        }
+
+        $file->name = $request->name;
+        $file->save();
+
+        return redirect()->route('admin.file.index')->with('success', 'File updated successfully.');
+    }
+
+    public function destroy(File $file)
+    {
+        $file->delete();
+        return redirect()->route('admin.file.index')->with('success', 'File deleted successfully.');
     }
 }

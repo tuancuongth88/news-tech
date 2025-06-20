@@ -51,10 +51,9 @@ class CategoryController extends Controller
     }
     public function dataTable()
     {
-
-    	$model = Category::query();
-
-    	return DataTables::eloquent($model)
+        try {
+            $model = Category::query();
+            return DataTables::of($model)
                 ->addColumn('post_count', function(Category $cate1) {
                     return $cate1->posts->count().' bài viết';
                 })
@@ -66,6 +65,10 @@ class CategoryController extends Controller
                     	<i class="fa fa-trash" aria-hidden="true"></i> Xoá
                     </button>')
                 ->make(true);
+        }catch (\Exception $e) {
+
+        }
+
     }
 
     public function postUpdate(Request $request)
