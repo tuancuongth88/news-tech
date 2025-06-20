@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckAdminMiddleWare;
+use Illuminate\Console\Scheduling\Schedule;
+use \App\Console\Commands\AutoCloneVietStock;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -31,6 +33,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => CheckAdminMiddleWare::class
         ]);
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->call(AutoCloneVietStock::class)->hourly();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
