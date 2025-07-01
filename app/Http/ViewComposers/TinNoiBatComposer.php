@@ -3,9 +3,9 @@
 namespace App\Http\ViewComposers;
 
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
+use App\Models\Post;
 
-class MenuComposer
+class TinNoiBatComposer
 {
     /**
      * The user repository implementation.
@@ -33,17 +33,18 @@ class MenuComposer
      */
     public function compose(View $view)
     {
-        $categories = DB::table('categories')
-            ->whereNull('parent_id')
-            ->orderBy('position', 'desc')
-            ->get()
-            ->map(function ($parent) {
-                $parent->children = DB::table('categories')
-                    ->where('parent_id', $parent->id)
-                    ->orderBy('position', 'asc')
-                    ->get();
-                return $parent;
-            });
-        $view->with('categories',$categories);
+        $mostViewedPost = Post::query()->where('status', 1)
+            ->orderBy('view', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $otherPosts = Post::query()->where('status', 1)
+            ->where('id', '!=', $mostViewedPost->id)
+            ->orderBy('view', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(4)->get();
+
+        $view->with('mostViewedPost', $mostViewedPost)
+            ->with('otherPosts', $otherPosts);
     }
 }

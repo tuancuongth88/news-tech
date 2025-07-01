@@ -6,7 +6,7 @@
 	@foreach($cates as $cate)
 
 		<article class="six column">
-			<h4 class="cat-title"><a href="category/{{ $cate->slug }}">{{ $cate->name }} ( {{ $cate->posts->where('status',1)->count() }} )</a></h4>
+			<h4 class="cat-title"><a href="/{ $cate->slug }}">{{ $cate->name }} ( {{ $cate->posts->where('status',1)->count() }} )</a></h4>
 			<?php
 				$posts = $cate->posts->where('status',1)->sortByDesc('created_at')->take(4);
 				$post_1 = $posts->shift();

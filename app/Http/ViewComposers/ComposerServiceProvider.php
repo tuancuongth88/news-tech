@@ -15,14 +15,18 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         // Using class based composers...
+//        View::composer(
+//            'news.partials.sidebar', 'App\Http\ViewComposers\SidebarComposer'
+//        );
+//        View::composer(
+//            'news.partials.menu', 'App\Http\ViewComposers\MenuComposer'
+//        );
+//        View::composer(
+//            'news.partials.slide', 'App\Http\ViewComposers\SlideComposer'
+//        );
+
         View::composer(
-            'news.partials.sidebar', 'App\Http\ViewComposers\SidebarComposer'
-        );
-        View::composer(
-            'news.partials.menu', 'App\Http\ViewComposers\MenuComposer'
-        );
-        View::composer(
-            'news.partials.slide', 'App\Http\ViewComposers\SlideComposer'
+            'theme-1.partials.header', 'App\Http\ViewComposers\MenuComposer'
         );
 
     }

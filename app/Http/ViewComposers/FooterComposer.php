@@ -2,10 +2,11 @@
 
 namespace App\Http\ViewComposers;
 
+use App\Models\Category;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
+use App\Models\Post;
 
-class MenuComposer
+class FooterComposer
 {
     /**
      * The user repository implementation.
@@ -33,17 +34,7 @@ class MenuComposer
      */
     public function compose(View $view)
     {
-        $categories = DB::table('categories')
-            ->whereNull('parent_id')
-            ->orderBy('position', 'desc')
-            ->get()
-            ->map(function ($parent) {
-                $parent->children = DB::table('categories')
-                    ->where('parent_id', $parent->id)
-                    ->orderBy('position', 'asc')
-                    ->get();
-                return $parent;
-            });
-        $view->with('categories',$categories);
+        $cate = Category::query()->whereNull('parent_id')->get();
+        $view->with('categories',$cate);
     }
 }

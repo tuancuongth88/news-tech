@@ -5,7 +5,7 @@ namespace App\Http\ViewComposers;
 use Illuminate\View\View;
 use App\Models\Post;
 
-class SlideComposer
+class TinMoiComposer
 {
     /**
      * The user repository implementation.
@@ -33,7 +33,7 @@ class SlideComposer
      */
     public function compose(View $view)
     {
-        $posts = Post::where('status',1)->where('hot',1)->orderBy('created_at','desc')->limit(4)->get();
+        $posts = Post::where('status',1)->orderBy('created_at','desc')->limit(10)->get();
         $view->with('posts',$posts);
     }
 }

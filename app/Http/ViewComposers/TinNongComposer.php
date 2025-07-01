@@ -3,9 +3,9 @@
 namespace App\Http\ViewComposers;
 
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
+use App\Models\Post;
 
-class MenuComposer
+class TinNongComposer
 {
     /**
      * The user repository implementation.
@@ -33,17 +33,7 @@ class MenuComposer
      */
     public function compose(View $view)
     {
-        $categories = DB::table('categories')
-            ->whereNull('parent_id')
-            ->orderBy('position', 'desc')
-            ->get()
-            ->map(function ($parent) {
-                $parent->children = DB::table('categories')
-                    ->where('parent_id', $parent->id)
-                    ->orderBy('position', 'asc')
-                    ->get();
-                return $parent;
-            });
-        $view->with('categories',$categories);
+        $posts = Post::where('status',1)->where('hot',1)->orderBy('created_at','desc')->limit(10)->get();
+        $view->with('posts',$posts);
     }
 }
