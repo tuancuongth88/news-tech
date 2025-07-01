@@ -17,7 +17,7 @@
                         >
                             {{ $cate->name }}
                         </h2>
-                        <a href="category/{{ $cate->slug }}" class="text-sm text-gray-500 hover:text-primary">Xem thêm</a>
+                        <a href="{{ $cate->slug }}" class="text-sm text-gray-500 hover:text-primary">Xem thêm</a>
                     </div>
                     @php
                         $posts = $cate->posts->where('status',1)->sortByDesc('created_at')->take(4);
