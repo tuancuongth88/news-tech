@@ -42,7 +42,7 @@ class TinNoiBatComposer
             ->where('id', '!=', $mostViewedPost->id)
             ->orderBy('view', 'desc')
             ->orderBy('created_at', 'desc')
-            ->limit(4)->get();
+            ->limit(6)->get();
 
         $view->with('mostViewedPost', $mostViewedPost)
             ->with('otherPosts', $otherPosts);
