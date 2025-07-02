@@ -35,44 +35,27 @@
             <div class="mt-10 pt-6 border-t border-gray-200">
                 <h2 class="text-2xl font-bold mb-6 text-gray-800">Tin tức liên quan</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <a href="#" class="block group">
-                        <div class="flex">
-                            <div class="w-1/3 mr-3">
-                                <div class="overflow-hidden rounded">
-                                    <img
-                                        src="https://readdy.ai/api/search-image?query=Vietnamese%20Prime%20Minister%20in%20a%20formal%20meeting%20with%20government%20officials%20discussing%20economic%20policies%2C%20professional%20photography%2C%20news%20style&width=300&height=200&seq=1&orientation=landscape"
-                                        alt="Tin liên quan 1"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
+                    @foreach($lq as $post)
+                        <a href="/post/{{$post['slug'] }}.html" class="block group">
+                            <div class="flex">
+                                <div class="w-1/3 mr-3">
+                                    <div class="overflow-hidden rounded">
+                                        <img
+                                            src="{{ $post->feture }}"
+                                            alt="{{ $post->title }}"
+                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="w-2/3">
+                                    <h3 class="font-bold mb-1 group-hover:text-primary">
+                                        {{ $post->title }}
+                                    </h3>
+                                    <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
                                 </div>
                             </div>
-                            <div class="w-2/3">
-                                <h3 class="font-bold mb-1 group-hover:text-primary">
-                                    Việt Nam đạt thỏa thuận thương mại mới với EU
-                                </h3>
-                                <p class="text-gray-500 text-sm">1 giờ trước</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="block group">
-                        <div class="flex">
-                            <div class="w-1/3 mr-3">
-                                <div class="overflow-hidden rounded">
-                                    <img
-                                        src="https://readdy.ai/api/search-image?query=modern%20high-tech%20factory%20in%20Vietnam%20with%20workers%20and%20robots%2C%20industrial%20photography&width=300&height=200&seq=2&orientation=landscape"
-                                        alt="Tin liên quan 2"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                </div>
-                            </div>
-                            <div class="w-2/3">
-                                <h3 class="font-bold mb-1 group-hover:text-primary">
-                                    Dự báo thời tiết: Miền Bắc đón đợt mưa lớn kéo dài
-                                </h3>
-                                <p class="text-gray-500 text-sm">3 giờ trước</p>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -83,30 +66,18 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-bold mb-4 text-gray-800 border-b-2 border-primary pb-2">Tin tức phổ biến</h2>
                 <ul class="space-y-4">
-                    <li>
-                        <a href="#" class="block group">
-                            <h3 class="font-bold mb-1 group-hover:text-primary">
-                                Giá vàng trong nước tiếp tục tăng cao kỷ lục
-                            </h3>
-                            <p class="text-gray-500 text-sm">5 giờ trước</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block group">
-                            <h3 class="font-bold mb-1 group-hover:text-primary">
-                                Thị trường bất động sản sôi động trở lại
-                            </h3>
-                            <p class="text-gray-500 text-sm">1 ngày trước</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block group">
-                            <h3 class="font-bold mb-1 group-hover:text-primary">
-                                Công nghệ AI thay đổi cuộc sống như thế nào?
-                            </h3>
-                            <p class="text-gray-500 text-sm">2 ngày trước</p>
-                        </a>
-                    </li>
+                    @foreach($pho_bien as $post)
+                        <li>
+                            <a href="/post/{{$post['slug'] }}.html" class="block group">
+                                <h3 class="font-bold mb-1 group-hover:text-primary">
+                                    {{ $post->title }}
+                                </h3>
+                                <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
+                            </a>
+                        </li>
+
+                    @endforeach
+
                 </ul>
             </div>
             <!-- Thời tiết -->

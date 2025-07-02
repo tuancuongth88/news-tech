@@ -74,9 +74,14 @@ class PagesController extends Controller
         } else
         {
             $post->view = $post->view + 1;
-            $post_lq = Post::where('status',1)->where('slug','!=', $slug)->where('category_id','=',$post->category_id)->take(5)->get();
+            $post_lq = Post::where('status',1)->where('slug','!=', $slug)
+                ->where('created_at','>=',now()->subDays(2))
+                ->where('category_id','=',$post->category_id)->orderBy('id', 'desc')->take(5)->get();
+            $post_pho_bien = Post::where('status',1)->where('slug','!=', $slug)
+                ->where('created_at','>=',now()->subDays(2))
+                ->where('category_id','=',$post->category_id)->orderBy('view', 'desc')->take(5)->get();
             $post->save();
-            return view('news.theme-1.pages.singlepost',['post'=>$post,'lq'=>$post_lq]);
+            return view('news.theme-1.pages.singlepost',['post'=>$post,'lq'=>$post_lq, 'pho_bien'=>$post_pho_bien]);
         }
     }
     public function getTag($key)
