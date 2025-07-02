@@ -21,10 +21,12 @@
             <div class="flex space-x-4 mb-2 md:mb-0">
                 <a href="/{{$cate->slug}}" class="py-2 {{ request()->segment(1) == $cate->slug && !request()->segment(2) ? 'filter-active' : '' }}">Tất cả</a>
                 @foreach($listCategory as $category)
-                    <a href="/{{ $category->slug }}"
-                       class="{{ request()->path() === $category->slug ? 'py-2 filter-active' : 'py-2 text-gray-600 hover:text-primary' }}">
-                        {{ $category->name }}
-                    </a>
+                    @if($category->slug)
+                        <a href="/{{ $category->slug }}"
+                           class="{{ request()->path() === $category->slug ? 'py-2 filter-active' : 'py-2 text-gray-600 hover:text-primary' }}">
+                            {{ $category->name }}
+                        </a>
+                    @endif
                 @endforeach
             </div>
             <div class="flex items-center">

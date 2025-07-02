@@ -32,7 +32,7 @@ class PagesController extends Controller
         $cate = Category::where('slug', $slug)->first();
         $categories = Category::where('parent_id',$cate->id)->get();
         if ($categories->count() == 0) {
-            $categories = $cate;
+            $categories = collect([$cate]);
         }
         if(!$cate || !$cate->posts){
             return view('news.theme-1.pages.category',['key'=>$slug]);
