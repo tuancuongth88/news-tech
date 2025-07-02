@@ -16,7 +16,7 @@ class PagesController extends Controller
         try {
             $cates = Category::where('name','!=','video')->whereNotNull('parent_id')->get();
             $videos = Post::query()->where('post_type','=','video')->take(5)->orderBy('created_at','desc')->get();
-            $postNew = Post::query()->where('status',1)->orderBy('created_at','desc')->take(5)->get();
+            $postNew = Post::query()->where('status',1)->orderBy('id','desc')->take(5)->get();
             return view('news.theme-1.pages.home',['cates'=>$cates,'videos'=>$videos, 'postNew' => $postNew]);
 //            return view('news.pages.home',['cates'=>$cates,'videos'=>$videos]);
         }catch (\Exception $e) {
@@ -42,7 +42,7 @@ class PagesController extends Controller
                             ->where('created_at','>=',now()->subDays(5))
                             ->orderBy('view','desc')
                             ->take(5)->get();
-            $list = Post::whereIn('category_id',$categories->pluck('id')->toArray())->where('status',1)->orderBy('created_at','desc')->paginate(10);
+            $list = Post::whereIn('category_id',$categories->pluck('id')->toArray())->where('status',1)->orderBy('id','desc')->paginate(10);
             return view('news.theme-1.pages.category',['posts'=>$list, 'listHot' => $listHot, 'cate'=>$cate, 'listCategory' => $categories]);
         }
 
@@ -61,7 +61,7 @@ class PagesController extends Controller
                 ->where('created_at','>=',now()->subDays(5))
                 ->orderBy('view','desc')
                 ->take(5)->get();
-            $list = Post::where('category_id',$sub_cate->id)->where('status',1)->orderBy('created_at','desc')->paginate(10);
+            $list = Post::where('category_id',$sub_cate->id)->where('status',1)->orderBy('id','desc')->paginate(10);
             return view('news.theme-1.pages.category',['posts'=>$list,'listHot' => $listHot,'cate'=>$cate, 'sub_cate' =>$sub_cate,'listCategory' => $cates]);
         }
     }
