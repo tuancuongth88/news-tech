@@ -78,13 +78,13 @@ class AutoCloneVietStock extends Command
                 'content' => $content,
                 'feture' => property_exists($item, 'feture') ? $item->feture : (property_exists($item, 'description') ? $this->extractImage((string) $item->description) : null),
                 'post_type' => 'text',
-                'hot' => $item['hot'],
+                'hot' => @$item['hot'] ?? 0,
                 'status' => 1,
                 'user_id' => 1,
                 'category_id' => $categoryId,
             ]);
         } catch (\Exception $exception) {
-            dd($exception, $item);
+            Log::error($exception);
         }
     }
 
