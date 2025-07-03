@@ -45,7 +45,7 @@ class AutoCloneVietStock extends Command
                 if (!in_array($slug, $existingSlugs)) {
                     $content = $this->fetchDetailContent((string) $item->link);
                     if ($content) {
-                        $item['hot'] = 0;
+                        $item->hot = 0;
                         $this->createPost($category->id, $item, $slug, $content);
                     }
                 }
@@ -78,7 +78,7 @@ class AutoCloneVietStock extends Command
                 'content' => $content,
                 'feture' => property_exists($item, 'feture') ? $item->feture : (property_exists($item, 'description') ? $this->extractImage((string) $item->description) : null),
                 'post_type' => 'text',
-                'hot' => @$item['hot'] ?? 0,
+                'hot' => $item->hot,
                 'status' => 1,
                 'user_id' => 1,
                 'category_id' => $categoryId,
