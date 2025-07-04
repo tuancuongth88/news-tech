@@ -34,12 +34,14 @@ class TinNoiBatComposer
     public function compose(View $view)
     {
         $mostViewedPost = Post::query()->where('status', 1)
+            ->whereDate('created_at', '>=', now()->subDays(2))
             ->orderBy('view', 'desc')
             ->orderBy('created_at', 'desc')
             ->first();
 
         $otherPosts = Post::query()->where('status', 1)
             ->where('id', '!=', $mostViewedPost->id)
+            ->whereDate('created_at', '>=', now()->subDays(2))
             ->orderBy('view', 'desc')
             ->orderBy('created_at', 'desc')
             ->limit(6)->get();

@@ -18,7 +18,6 @@ class PagesController extends Controller
             $videos = Post::query()->where('post_type','=','video')->take(5)->orderBy('created_at','desc')->get();
             $postNew = Post::query()->where('status',1)->orderBy('id','desc')->take(5)->get();
             return view('news.theme-1.pages.home',['cates'=>$cates,'videos'=>$videos, 'postNew' => $postNew]);
-//            return view('news.pages.home',['cates'=>$cates,'videos'=>$videos]);
         }catch (\Exception $e) {
             return response()->json([
                 'status' => false,
