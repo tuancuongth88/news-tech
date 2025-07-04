@@ -6,6 +6,15 @@
 			@foreach ($categories as $cate)
 				<li>
 					<a href="category/{{ $cate->slug }}">{{ $cate->name }}</a>
+                    @if (count($cate->children ?? []))
+                    <ul class="submenu">
+                        @foreach ($cate->children as $child)
+                            <li>
+                                <a href="{{ url('category/'.$child->slug) }}">{{ $child->name }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @endif
 	    		</li>
 			@endforeach
     		<li><a href="contact.html">Liên Hệ</a></li>
@@ -19,3 +28,4 @@
 		</form>
 	</div>
 </header>
+

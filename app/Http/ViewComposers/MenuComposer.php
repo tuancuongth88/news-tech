@@ -33,7 +33,17 @@ class MenuComposer
      */
     public function compose(View $view)
     {
-        $categories = DB::table('categories')->limit(5)->get();
+        $categories = DB::table('categories')
+            ->whereNull('parent_id')
+            ->orderBy('position', 'desc')
+            ->get()
+            ->map(function ($parent) {
+                $parent->children = DB::table('categories')
+                    ->where('parent_id', $parent->id)
+                    ->orderBy('position', 'asc')
+                    ->get();
+                return $parent;
+            });
         $view->with('categories',$categories);
     }
 }

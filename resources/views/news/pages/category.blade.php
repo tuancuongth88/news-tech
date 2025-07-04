@@ -18,10 +18,11 @@
 				<a href="post/{{$post->slug}}.html"><video src="{{ $post->feture}}" alt="" style="width: 100%"></video></a>
 			</div>
 		@else
+
 			<div class="post-image zoom-out">
-				@if($post->feture) 
+				@if($post->feture)
 					<?php $image = $post->feture; ?>
-				@else 
+				@else
 					<?php $image = 'http://placehold.it/300x220'; ?>
 				@endif
 				<figure><a href="post/{{$post->slug}}.html"><img src="{{$image}}" alt="" style="width: 300px;height: 220px;"></a></figure>

@@ -16,22 +16,11 @@ use Illuminate\Support\Facades\Hash;
 /* Route for user */
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
-    Route::get('', 'PagesController@getindex');
-    /* Display front */
-    Route::get('category/{slug}','PagesController@getCategory');
-    Route::get('post/{slug}.html','PagesController@getPost');
-    Route::get('tag/{tag}','PagesController@getTag');
-    Route::get('author/{name}','PagesController@getAuthor');
-    Route::get('search','PagesController@getSearch')->name('search');
-    Route::get('contact.html','PagesController@getContact');
+    Route::get('', 'PagesController@getindex')->name('home');
 
     Route::get('login', 'LoginController@getLogin');
     Route::post('login', 'LoginController@postLogin')->name('login');
     Route::get('logout', 'LoginController@getLogout');
-    Route::get('changepassword', function() {
-
-        echo Hash::make('12345678');
-    });
 
     /*Group router for author and admin */
     Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
@@ -78,7 +67,30 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('data', 'AdminController@dataTable')->name('data-author');
                 Route::post('add', 'AdminController@postAdd');
                 Route::delete('delete', 'AdminController@delete');
+
             });
+//            Route::prefix('file-manager')->group(function () {
+//                Route::get('/', 'FileController@index')->name('file-manager.index');
+//                Route::get('create', 'FileController@create')->name('file-manager.create');
+//                Route::post('store', 'FileController@store')->name('file-manager.store');
+//                Route::get('edit/{id}', 'FileController@edit')->name('file-manager.edit');
+//                Route::get('edit/{id}', 'FileController@edit')->name('file-manager.edit');
+//                Route::put('update/{file}', 'FileController@update')->name('file-manager.update');
+//            });
         });
+    });
+
+    /* Display front */
+    Route::get('post/{slug}.html','PagesController@getPost');
+    Route::get('{slug}','PagesController@getCategory')->name('category');
+    Route::get('{slug}/{sub_slug}','PagesController@getSubCategory');
+    Route::get('tag/{tag}','PagesController@getTag');
+    Route::get('author/{name}','PagesController@getAuthor');
+    Route::get('search','PagesController@getSearch')->name('search');
+    Route::get('contact.html','PagesController@getContact');
+
+
+    Route::get('changepassword', function() {
+        echo Hash::make('12345678');
     });
 });

@@ -11,9 +11,10 @@
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
 
-	<link rel="stylesheet" href="css/foundation.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="css/hover.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="css/responsive.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/foundation.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/hover.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/responsive.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+
 </head>
