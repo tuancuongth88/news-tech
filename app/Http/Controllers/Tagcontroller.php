@@ -16,21 +16,7 @@ class Tagcontroller extends Controller
     public function postAdd(Request $request)
     {
     	if($request->ajax()){
-    	// $this->validate($req,
-    	// 	[
-    	// 		'cate_name'=>'required|unique:categories,name|min:3|max:70',
-     //            'slug'=> 'required|unique:categories,slug|alpha_dash|max:100',
-     //            'parent_id'=> 'integer',
-    	// 	],
-    	// 	[
-    	// 		'cate_name.required'=>'Bạn chưa nhập tên chuyên mục!',
-     //            'cate_name.min'=>'Tên chuyên mục gồm ít nhất 3 ký tự!',
-     //            'cate_name.max'=>'Tên chuyên mục gồm tối đa 50 ký tự!',
-    	// 		'slug.unique' => 'Url chuyên mục đã tồn tại, vui lòng nhập lại tên!',
-     //            'slug.required'=> 'Không được bỏ trống url',
-     //            'slug.alpha_dash'=> 'Sai định dạng slug.',
-     //            'parent_id.integer' => 'Chuyên mục cha phải là số.'
-    	// 	]);
+
 	    	$tag = new Tag();
 	    	$tag->name = $request->input('tag-name');
 	    	$tag->slug = $request->input('slug');
