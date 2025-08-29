@@ -18,6 +18,7 @@ class AutoCloneVietStock extends Command
     {
         $this->processTinMoi();
         $this->processCategories();
+        $this->deletePostOld();
     }
 
     private function processCategories()
@@ -192,5 +193,10 @@ class AutoCloneVietStock extends Command
                 }
             }
         }
+    }
+
+    private function deletePostOld()
+    {
+        Post::query()->where('created_at', '<', now()->subDays(5))->delete();
     }
 }
