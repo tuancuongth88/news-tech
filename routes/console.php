@@ -19,3 +19,5 @@ Artisan::command('inspire', function () {
 })->describe('Display an inspiring quote');
 
 Schedule::command('app:auto-clone-vietstock')->everyMinute();
+Schedule::command('app:fetch-weather-data')->hourly();
+Schedule::command('app:fetch-exchange-rate-data')->hourly();

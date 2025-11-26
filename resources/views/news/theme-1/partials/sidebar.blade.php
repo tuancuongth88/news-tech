@@ -19,80 +19,137 @@
     <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <h3 class="text-lg font-bold mb-4 pb-2 border-b">Thời tiết</h3>
         <div class="space-y-3">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="font-medium">Hà Nội</p>
-                    <p class="text-sm text-gray-500">Có mây, có mưa rào</p>
-                </div>
-                <div class="flex items-center">
-                    <div
-                        class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
-                    >
-                        <i class="ri-sun-cloudy-fill ri-lg"></i>
+            @forelse($weatherData as $weather)
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">{{ $weather['name'] }}</p>
+                        <p class="text-sm text-gray-500">{{ $weather['description'] }}</p>
                     </div>
-                    <span class="font-bold">28°C</span>
-                </div>
-            </div>
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="font-medium">TP.HCM</p>
-                    <p class="text-sm text-gray-500">Nắng, có mây</p>
-                </div>
-                <div class="flex items-center">
-                    <div
-                        class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
-                    >
-                        <i class="ri-sun-fill ri-lg"></i>
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
+                        >
+                            <i class="{{ $weather['icon'] }} ri-lg"></i>
+                        </div>
+                        <span class="font-bold">
+                            @if($weather['temperature'])
+                                {{ $weather['temperature'] }}°C
+                            @else
+                                --
+                            @endif
+                        </span>
                     </div>
-                    <span class="font-bold">33°C</span>
                 </div>
-            </div>
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="font-medium">Đà Nẵng</p>
-                    <p class="text-sm text-gray-500">Nắng, gió nhẹ</p>
-                </div>
-                <div class="flex items-center">
-                    <div
-                        class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
-                    >
-                        <i class="ri-sun-fill ri-lg"></i>
+            @empty
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">Hà Nội</p>
+                        <p class="text-sm text-gray-500">Đang tải...</p>
                     </div>
-                    <span class="font-bold">31°C</span>
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
+                        >
+                            <i class="ri-sun-cloudy-fill ri-lg"></i>
+                        </div>
+                        <span class="font-bold">--</span>
+                    </div>
                 </div>
-            </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">TP.HCM</p>
+                        <p class="text-sm text-gray-500">Đang tải...</p>
+                    </div>
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
+                        >
+                            <i class="ri-sun-fill ri-lg"></i>
+                        </div>
+                        <span class="font-bold">--</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">Đà Nẵng</p>
+                        <p class="text-sm text-gray-500">Đang tải...</p>
+                    </div>
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 flex items-center justify-center text-yellow-500 mr-1"
+                        >
+                            <i class="ri-sun-fill ri-lg"></i>
+                        </div>
+                        <span class="font-bold">--</span>
+                    </div>
+                </div>
+            @endforelse
         </div>
         <a href="#" class="text-primary text-sm block text-right mt-3"
         >Xem thêm</a
         >
     </div>
-    <!-- Tỷ giá -->
+    <!-- Tỷ giá ngoại tệ -->
     <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <h3 class="text-lg font-bold mb-4 pb-2 border-b">
             Tỷ giá ngoại tệ
         </h3>
         <div class="space-y-2">
+            @forelse($exchangeRates ?? [] as $rate)
+                <div class="flex justify-between">
+                    <span>{{ $rate['code'] }}</span>
+                    <span class="font-medium">
+                        @if($rate['rate'] !== '--')
+                            {{ $rate['rate'] }} VND
+                        @else
+                            --
+                        @endif
+                    </span>
+                </div>
+            @empty
+                <div class="flex justify-between">
+                    <span>USD</span>
+                    <span class="font-medium">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>EUR</span>
+                    <span class="font-medium">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>JPY</span>
+                    <span class="font-medium">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>GBP</span>
+                    <span class="font-medium">--</span>
+                </div>
+            @endforelse
+        </div>
+        <a href="#" class="text-primary text-sm block text-right mt-3"
+        >Xem thêm</a
+        >
+    </div>
+    <!-- Tỷ giá vàng -->
+    @if(isset($goldData) && $goldData)
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <h3 class="text-lg font-bold mb-4 pb-2 border-b">
+            Tỷ giá vàng SJC
+        </h3>
+        <div class="space-y-2">
             <div class="flex justify-between">
-                <span>USD</span>
-                <span class="font-medium">24.850 VND</span>
+                <span>Mua vào</span>
+                <span class="font-medium text-green-600">{{ $goldData['buy'] }} triệu/{{ $goldData['unit'] }}</span>
             </div>
             <div class="flex justify-between">
-                <span>EUR</span>
-                <span class="font-medium">26.720 VND</span>
-            </div>
-            <div class="flex justify-between">
-                <span>JPY</span>
-                <span class="font-medium">165,25 VND</span>
-            </div>
-            <div class="flex justify-between">
-                <span>GBP</span>
-                <span class="font-medium">31.450 VND</span>
+                <span>Bán ra</span>
+                <span class="font-medium text-red-600">{{ $goldData['sell'] }} triệu/{{ $goldData['unit'] }}</span>
             </div>
         </div>
         <a href="#" class="text-primary text-sm block text-right mt-3"
         >Xem thêm</a
         >
     </div>
+    @endif
     <!-- Quảng cáo -->
     <div class="bg-gray-100 rounded-lg p-4 mb-6 text-center">
         <p class="text-sm text-gray-500 mb-2">Quảng cáo</p>

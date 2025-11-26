@@ -46,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer(
             'news.theme-1.partials.footer', 'App\Http\ViewComposers\FooterComposer'
         );
+        View::composer(
+            'news.theme-1.partials.sidebar', 'App\Http\ViewComposers\SidebarTheme1Composer'
+        );
         Paginator::defaultView('news.theme-1.components.pagination');
     }
 }
