@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -14,10 +15,21 @@ class AutoCloneVietStock extends Command
     protected $signature = 'app:auto-clone-vietstock';
     protected $description = 'Automatically clone VietStock data';
 
+    private $postsToInsert = [];
+    private $existingSlugs = null;
+
     public function handle()
     {
+        // Lấy danh sách slugs một lần duy nhất và chuyển thành hash map để tìm kiếm nhanh hơn
+        $slugs = $this->getRecentPostSlugs();
+        $this->existingSlugs = array_flip($slugs);
+        
         $this->processTinMoi();
         $this->processCategories();
+        
+        // Insert tất cả posts cùng lúc
+        $this->batchInsertPosts();
+        
         $this->deletePostOld();
     }
 
@@ -32,7 +44,6 @@ class AutoCloneVietStock extends Command
     private function processCategoryPosts(Category $category)
     {
         try {
-            $existingSlugs = $this->getRecentPostSlugs();
             $rssContent = $this->fetchRssContent($category->rss_url);
 
             if (!$rssContent) {
@@ -43,11 +54,11 @@ class AutoCloneVietStock extends Command
             $rss = simplexml_load_string($rssContent, 'SimpleXMLElement', LIBXML_NOCDATA);
             foreach ($rss->channel->item as $item) {
                 $slug = $this->generateSlug((string) $item->title);
-                if (!in_array($slug, $existingSlugs)) {
+                if (!isset($this->existingSlugs[$slug])) {
                     $content = $this->fetchDetailContent((string) $item->link);
                     if ($content) {
                         $item->hot = 0;
-                        $this->createPost($category->id, $item, $slug, $content);
+                        $this->preparePostData($category->id, $item, $slug, $content);
                     }
                 }
             }
@@ -68,24 +79,46 @@ class AutoCloneVietStock extends Command
         return Str::slug($title) . '-' . time();
     }
 
-    private function createPost($categoryId, $item, $slug, $content)
+    private function preparePostData($categoryId, $item, $slug, $content)
     {
+        $now = now();
+        $this->postsToInsert[] = [
+            'title' => property_exists($item, 'title') ? (string) $item->title : 'No Title',
+            'slug' => $slug,
+            'description' => property_exists($item, 'description') ? strip_tags((string) $item->description) : '',
+            'content' => $content,
+            'feture' => property_exists($item, 'feture') ? $item->feture : (property_exists($item, 'description') ? $this->extractImage((string) $item->description) : null),
+            'post_type' => 'text',
+            'hot' => property_exists($item, 'hot') ? $item->hot : 0,
+            'status' => 1,
+            'user_id' => 1,
+            'category_id' => $categoryId,
+            'view' => 1,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ];
+        
+        // Thêm slug vào danh sách để tránh trùng lặp trong cùng một lần chạy
+        $this->existingSlugs[$slug] = true;
+    }
+
+    private function batchInsertPosts()
+    {
+        if (empty($this->postsToInsert)) {
+            return;
+        }
+
         try {
-            Post::create([
-                'title' => property_exists($item, 'title') ? (string) $item->title : 'No Title',
-                'link' => property_exists($item, 'link') ? (string) $item->link : '',
-                'slug' => $slug,
-                'description' => property_exists($item, 'description') ? strip_tags((string) $item->description) : '',
-                'content' => $content,
-                'feture' => property_exists($item, 'feture') ? $item->feture : (property_exists($item, 'description') ? $this->extractImage((string) $item->description) : null),
-                'post_type' => 'text',
-                'hot' => $item->hot,
-                'status' => 1,
-                'user_id' => 1,
-                'category_id' => $categoryId,
-            ]);
+            // Chia nhỏ thành các batch để tránh query quá lớn
+            $chunks = array_chunk($this->postsToInsert, 100);
+            foreach ($chunks as $chunk) {
+                DB::table('posts')->insert($chunk);
+            }
+            
+            $this->info('Đã insert ' . count($this->postsToInsert) . ' posts thành công.');
+            $this->postsToInsert = [];
         } catch (\Exception $exception) {
-            Log::error($exception);
+            Log::error('Error batch inserting posts: ' . $exception->getMessage());
         }
     }
 
@@ -178,18 +211,21 @@ class AutoCloneVietStock extends Command
         $paginate = ['item' => 30, 'row' => 1];
         $response = Http::post('https://vietstock.vn/_Partials/NewsNewUpdatePaging', $paginate);
         $categoryTinMoi = Category::query()->where('slug', 'tin-moi')->first();
-        $existingSlugs = $this->getRecentPostSlugs();
+
+        if (!$categoryTinMoi) {
+            return;
+        }
 
         if ($response->json()['Data']) {
             foreach ($response->json()['Data'] as $newHot) {
                 $slug = $this->generateSlug($newHot['Title']);
-                if (!in_array($slug, $existingSlugs)) {
+                if (!isset($this->existingSlugs[$slug])) {
                     $cleanedContent = preg_replace('/<p\s+class="p(?:Title|Head)">.*?<\/p>\s*/is', '', $newHot['Content']);
                     $newHot['description'] =  $newHot['Head'];
                     $newHot['feture'] =  $newHot['HeadImageUrl'];
                     $newHot['title'] =  $newHot['Title'];
                     $newHot['hot'] =  1;
-                    $this->createPost($categoryTinMoi->id, (object) $newHot, $slug, $cleanedContent);
+                    $this->preparePostData($categoryTinMoi->id, (object) $newHot, $slug, $cleanedContent);
                 }
             }
         }
